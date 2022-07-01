@@ -1,56 +1,27 @@
-#include<iostream>
-#include<list>
-#include<queue>
-#include<unordered_map>
-using namespace std;
-class graph
-{
-    public:
-    unordered_map<int,list<int>>node;
+//You are given an undirected graph of 'N' nodes and 'M' edges. Your task is to create the graph and print the adjacency list of the graph. It is guaranteed that all the edges are unique, i.e., if there is an edge from 'X' to 'Y', then there is no edge present from 'Y' to 'X' and vice versa. Also, there are no self-loops present in the graph.
+//In graph theory, an adjacency list is a collection of unordered lists used to represent a finite graph. Each list describes the set of neighbors of a vertex in the graph.
 
-    void create(int u,int v,bool direction)
+
+
+vector < vector < int >> printAdjacency(int n, int m, vector < vector < int >> & edges) {
+    // Write your code here.
+    vector<int>ans[n];
+    for(int i=0;i<m;i++)
     {
-        node[u].push_back(v);
-        //if direction equal to false then
-        if(direction==0)
+        int u=edges[i][0];
+        int v=edges[i][1];
+
+        ans[u].push_back(v);
+        ans[v].push_back(u);
+    }
+    vector<vector<int>>adj(n);
+    for(int i=0;i<n;i++)
+    {
+        adj[i].push_back(i);
+        for(int j=0;j<ans[i].size();j++)
         {
-           node[v].push_back(u);
+            adj[i].push_back(ans[i][j]);
         }
     }
-    void print()
-    {
-        for(auto i : node)
-        {
-            cout<<i.first;
-            cout<<"->";
-            //cout<<i.second;
-            for(auto j: i.second)
-            {
-
-                cout<<j<<" ";
-            }
-            cout<<endl;
-        }
-
-    }
-};
-int main()
-{
-    graph g;
-    cout<<"Enter total number of node";
-    int n;
-    cin>>n;
-
-    cout<<"Enter total number of vertex";
-    int e;
-    cin>>e;
-
-    for(int i=0;i<e;i++)
-    {
-        int u,v;
-        cin>>u>>v;
-        g.create(u,v,false);
-    }
-    g.print();
-
+    return adj;
 }

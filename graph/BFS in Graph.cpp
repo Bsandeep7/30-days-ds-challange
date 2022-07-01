@@ -1,27 +1,58 @@
-//You are given an undirected graph of 'N' nodes and 'M' edges. Your task is to create the graph and print the adjacency list of the graph. It is guaranteed that all the edges are unique, i.e., if there is an edge from 'X' to 'Y', then there is no edge present from 'Y' to 'X' and vice versa. Also, there are no self-loops present in the graph.
-//In graph theory, an adjacency list is a collection of unordered lists used to represent a finite graph. Each list describes the set of neighbors of a vertex in the graph.
+#include<vector>
+#include<unordered_map>
+#include<list>
+#include<queue>
+#include<set>
 
-
-
-vector < vector < int >> printAdjacency(int n, int m, vector < vector < int >> & edges) {
-    // Write your code here.
-    vector<int>ans[n];
-    for(int i=0;i<m;i++)
+void prepareList( unordered_map<int,set<int>>&adj,vector<pair<int, int>> edges)
+{
+    for(int i=0;i<edges.size();i++)
     {
-        int u=edges[i][0];
-        int v=edges[i][1];
-
-        ans[u].push_back(v);
-        ans[v].push_back(u);
+        int u=edges[i].first;
+        int v=edges[i].second;
+        adj[u].insert(v);
+        adj[v].insert(u);
+        
     }
-    vector<vector<int>>adj(n);
-    for(int i=0;i<n;i++)
+}
+void BFSans( unordered_map<int,set<int>>adj,vector<int>&ans, unordered_map<int,bool>&visited,int node)
+{
+    queue<int>q;
+    q.push(node);
+    visited[node]=true;
+    while(!q.empty())
     {
-        adj[i].push_back(i);
-        for(int j=0;j<ans[i].size();j++)
+        int frontNode=q.front();
+        q.pop();
+        
+        ans.push_back(frontNode);
+        
+        for(auto i: adj[frontNode])
         {
-            adj[i].push_back(ans[i][j]);
+           
+            if(!visited[i])
+            {
+                q.push(i);
+                visited[i]=true;
+            }
         }
+               
     }
-    return adj;
+    
+}
+
+vector<int> BFS(int vertex, vector<pair<int, int>> edges)
+{
+    // Write your code here
+    unordered_map<int,set<int>>adj;
+    unordered_map<int,bool>visited;
+    vector<int>ans;
+    prepareList(adj,edges);
+    for(int i=0;i<vertex;i++)
+    {
+        if(!visited[i])
+        BFSans(adj,ans,visited,i);
+    }
+    return ans;
+    
 }
